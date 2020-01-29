@@ -1,0 +1,43 @@
+{
+  "name": "coursesynd",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "babel src -d dist",
+    "start": "node ./dist/app.js",
+    "dev": "nodemon ./src/app.js --exec babel-node",
+    "pretest": "NODE_ENV=test npm run db:drop && NODE_ENV=test npm run db:seed",
+    "test": "NODE_ENV=test jest @babel/register ./src/test/tests.test.js --detectOpenHandles  --verbose  --coverage --maxWorkers=1 ",
+    "db:drop": "babel-node src/db/seeds/drop_database.js",
+    "db:seed": "babel-node src/db/seeds/seed_database.js"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ]
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@babel/polyfill": "^7.8.3",
+    "bcrypt": "^3.0.7",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-validator": "^6.3.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.8.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.3",
+    "@babel/core": "^7.8.3",
+    "@babel/node": "^7.8.3",
+    "@babel/preset-env": "^7.8.3",
+    "http-terminator": "^1.2.3",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "supertest": "^4.0.2"
+  }
+}
