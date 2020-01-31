@@ -4,10 +4,8 @@ import jwt from 'jsonwebtoken';
 
 const saltRounds = 10;
 
-
 const encryptPassword = async (password) => {
   try {
-  //  const salt = bcrypt.genSaltSync(saltRounds);
     const hash = await bcrypt.hash(password, saltRounds);
     return hash;
   } catch (error) {
@@ -15,9 +13,8 @@ const encryptPassword = async (password) => {
   }
 };
 
-const generateToken = (payload) => {
-  const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1day' });
-  return token;
-};
+const generateToken = payload => jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: '1day' });
 
-export { encryptPassword, generateToken };
+const comparePassword = (password, hash) => bcrypt.compareSync(password, hash);
+
+export { encryptPassword, generateToken, comparePassword };

@@ -48,6 +48,38 @@ const invalidPassword = {
 const existingEmail = {
   ...newUser, email: 'ryan@gmail.com'
 };
+
+const authUser = {
+  email: 'ryan@gmail.com',
+  password: 'ryangosl'
+};
+
+const emptyAuthUser = {
+  email: '',
+  password: ''
+};
+
+const emptyEmailAuthUser = {
+  ...authUser, email: ''
+};
+
+const emptyPasswordAuthUser = {
+  ...authUser, password: ''
+};
+
+const wrongEmail = {
+  ...authUser, email: 'ling@gmail.com'
+};
+
+const wrongPassword = {
+  ...authUser, password: 'jigtfjijjuhi'
+};
+
+const wrongEmailAuthUser = {
+  ...authUser, email: 'ryangmail.com'
+};
+
+
 export {
   newUser,
   emptyUser,
@@ -59,5 +91,12 @@ export {
   nonAlphabetLastName,
   invalidEmail,
   invalidPassword,
-  existingEmail
+  existingEmail,
+  authUser,
+  emptyAuthUser,
+  emptyEmailAuthUser,
+  emptyPasswordAuthUser,
+  wrongEmail,
+  wrongPassword,
+  wrongEmailAuthUser
 };

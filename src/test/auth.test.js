@@ -13,7 +13,14 @@ import {
   nonAlphabetLastName,
   invalidEmail,
   invalidPassword,
-  existingEmail
+  existingEmail,
+  authUser,
+  emptyAuthUser,
+  emptyEmailAuthUser,
+  emptyPasswordAuthUser,
+  wrongEmail,
+  wrongPassword,
+  wrongEmailAuthUser
 } from './helpers/fixtures';
 
 const URL = '/api/v1/auth';
@@ -32,10 +39,10 @@ describe('Auth Routes', () => {
         .expect(201)
         .end((err, res) => {
           expect(res.body.status).toBe(201);
-          expect(res.body.newUser).toHaveProperty('firstName');
-          expect(res.body.newUser).toHaveProperty('lastName');
-          expect(res.body.newUser).toHaveProperty('email');
-          expect(res.body.newUser).toHaveProperty('token');
+          expect(res.body.data).toHaveProperty('firstName');
+          expect(res.body.data).toHaveProperty('lastName');
+          expect(res.body.data).toHaveProperty('email');
+          expect(res.body.data).toHaveProperty('token');
           if (err) return done(err);
           done();
         });
@@ -198,6 +205,105 @@ describe('Auth Routes', () => {
         .expect(409)
         .end((err, res) => {
           expect(res.body.error).toBe('User with that email already exists');
+          if (err) return done(err);
+          done();
+        });
+    });
+  });
+
+  describe('Login Routes', () => {
+    it('should log in an existing user ', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(authUser)
+        .expect(200)
+        .end((err, res) => {
+          expect(res.body.status).toBe(200);
+          expect(res.body.data).toHaveProperty('firstName');
+          expect(res.body.data).toHaveProperty('lastName');
+          expect(res.body.data).toHaveProperty('email');
+          expect(res.body.data).toHaveProperty('token');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+
+    it('should not log in a user with empty email and password fields', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(emptyAuthUser)
+        .expect(400)
+        .end((err, res) => {
+          expect(res.body.status).toBe(400);
+          expect(res.body.error.email).toBe('Email address is required');
+          expect(res.body.error.password).toBe('Password is required');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it('should not log in a user with empty email field', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(emptyEmailAuthUser)
+        .expect(400)
+        .end((err, res) => {
+          expect(res.body.status).toBe(400);
+          expect(res.body.error.email).toBe('Email address is required');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+
+    it('should not log in a user with empty password field', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(emptyPasswordAuthUser)
+        .expect(400)
+        .end((err, res) => {
+          expect(res.body.status).toBe(400);
+          expect(res.body.error.password).toBe('Password is required');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it('should not log in a user with wrong details', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(wrongEmail)
+        .expect(401)
+        .end((err, res) => {
+          expect(res.body.status).toBe(401);
+          expect(res.body.error).toBe('Email or password is incorrect');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it('should not log in a user with wrong details', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(wrongPassword)
+        .expect(401)
+        .end((err, res) => {
+          expect(res.body.status).toBe(401);
+          expect(res.body.error).toBe('Email or password is incorrect');
+          if (err) return done(err);
+          done();
+        });
+    });
+
+    it('should not log in a new user with an invalid email', (done) => {
+      request(app)
+        .post(`${URL}/signin`)
+        .send(wrongEmailAuthUser)
+        .expect(400)
+        .end((err, res) => {
+          expect(res.body.status).toBe(400);
+          expect(res.body.error).toBe('Enter a valid email address');
           if (err) return done(err);
           done();
         });
